@@ -4,9 +4,6 @@
   "private": true,
   "license": "Apache-2.0",
   "description": "BC Wallet - Verifiable Credential Demo",
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.2",
     "@snowplow/browser-tracker": "^3.14.0",

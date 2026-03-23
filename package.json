@@ -12,9 +12,6 @@
     "client",
     "server"
   ],
-  "engines": {
-    "node": ">=20.0.0"
-  },
   "scripts": {
     "check-types": "tsc --noEmit",
     "prettier": "prettier '**/*.+(js|json|ts|md|yml|yaml)'",
