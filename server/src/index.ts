@@ -92,7 +92,13 @@ const run = async () => {
   })
 
   const port = Number(process.env.PORT) || 5000
-  server.listen(port)
+  server.listen(port, () => {
+    // Railway (and similar) set PORT; public URL never uses :5000 — proxy must match this bind port.
+    console.info(`BC-Wallet-Demo server listening on port ${port}`)
+  })
 }
 
-run()
+run().catch((err) => {
+  console.error('Server failed to start (often Traction env or token):', err)
+  process.exit(1)
+})

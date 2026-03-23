@@ -29,13 +29,19 @@ const rootReducer = combineReducers({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pReducer = (state: any, action: any) => {
   if (action.type === 'persist/REHYDRATE') {
-    const storageVersion = action.payload?._persist.version
+    const storageVersion = action.payload?._persist?.version
 
     if (storageVersion !== VERSION) {
       return rootReducer(undefined, action)
     }
 
-    return rootReducer(action.payload, action)
+    if (action.payload) {
+      const rehydrated = { ...action.payload }
+      delete rehydrated._persist
+      return rootReducer(rehydrated, action)
+    }
+
+    return rootReducer(state, action)
   }
 
   if (action.type === 'demo/RESET') {
