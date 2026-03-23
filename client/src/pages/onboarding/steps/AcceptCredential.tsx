@@ -118,8 +118,7 @@ export const AcceptCredential: React.FC<Props> = ({
       return
     }
     const { endpoint, state } = message
-    const issued =
-      state === 'credential_issued' || state === 'credential-issued' || state === 'done'
+    const issued = state === 'credential_issued' || state === 'credential-issued' || state === 'done'
     if (endpoint === 'issue_credential' && issued) {
       dispatch(setCredential(message))
     }

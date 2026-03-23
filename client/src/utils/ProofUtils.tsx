@@ -2,10 +2,7 @@ import type { Attribute } from '../slices/types'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getAttributesFromProof = (proof: any) => {
-  const requestedProof =
-    proof?.presentation?.requested_proof ||
-    proof?.pres?.requested_proof ||
-    proof?.requested_proof
+  const requestedProof = proof?.presentation?.requested_proof || proof?.pres?.requested_proof || proof?.requested_proof
 
   const groups = requestedProof?.revealed_attr_groups
   const attributes: Attribute[] = []

@@ -31,18 +31,14 @@ const credentialSlice = createSlice({
     },
     setCredential: (state, action) => {
       const credentialData = action.payload
-      const credDefId: string | undefined =
-        credentialData.credential_definition_id ?? credentialData.cred_def_id
+      const credDefId: string | undefined = credentialData.credential_definition_id ?? credentialData.cred_def_id
       if (!credDefId) return
       const credName = credDefId.split(/[:/]/).filter(Boolean).pop() ?? credDefId
       if (!state.issuedCredentials.includes(credName)) {
         state.issuedCredentials.push(credName)
       }
       const revRegId = credentialData.revoc_reg_id ?? credentialData.rev_reg_id
-      if (
-        revRegId &&
-        !state.revokableCredentials.map((rev) => rev.revocationRegId).includes(revRegId)
-      ) {
+      if (revRegId && !state.revokableCredentials.map((rev) => rev.revocationRegId).includes(revRegId)) {
         state.revokableCredentials.push({
           revocationRegId: revRegId,
           connectionId: credentialData.connection_id,

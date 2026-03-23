@@ -46,8 +46,7 @@ const proofSlice = createSlice({
         // const url = action.payload.message.split('?')[0] + '?id=' + action.payload.proofRecord.id
         state.proofUrl = action.payload.proofUrl
         state.proof = action.payload.proof
-        const pid =
-          action.payload.proof.pres_ex_id ?? action.payload.proof.presentation_exchange_id
+        const pid = action.payload.proof.pres_ex_id ?? action.payload.proof.presentation_exchange_id
         if (pid) {
           state.proof = { ...action.payload.proof, id: pid }
         }

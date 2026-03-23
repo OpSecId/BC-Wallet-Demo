@@ -34,10 +34,7 @@ export const StepProof: React.FC<Props> = ({
   const dispatch = useAppDispatch()
   const st = proof?.state as string
   const proofReceived =
-    st === 'presentation_received' ||
-    st === 'presentation-received' ||
-    st === 'verified' ||
-    st === 'done'
+    st === 'presentation_received' || st === 'presentation-received' || st === 'verified' || st === 'done'
 
   const [isFailedRequestModalOpen, setIsFailedRequestModalOpen] = useState(false)
   const showFailedRequestModal = () => setIsFailedRequestModalOpen(true)
