@@ -3,9 +3,10 @@ ARG runtime_image=caddy:alpine
 
 # build stage
 FROM ${build_image} as build-stage
+RUN corepack enable && corepack prepare yarn@1.22.22 --activate
 WORKDIR /app
 COPY . .
-RUN yarn install
+RUN yarn install --frozen-lockfile
 RUN yarn build
 
 
