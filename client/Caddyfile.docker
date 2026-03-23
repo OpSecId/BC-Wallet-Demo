@@ -1,5 +1,5 @@
-# Static SPA only — API calls go to REACT_APP_HOST_BACKEND from the browser (see BaseUrl.ts).
-# Railway sets PORT; Caddy listens on that port.
+# Static SPA — API calls use REACT_APP_HOST_BACKEND in the browser (BaseUrl.ts).
+# Railway sets PORT.
 
 :{$PORT}
 
@@ -17,14 +17,17 @@ handle /digital-trust/showcase {
 	redir /digital-trust/showcase/ 308
 }
 
-# Trailing slash only → index.html
-handle /digital-trust/showcase/ {
+# IMPORTANT: /digital-trust/showcase/* must come BEFORE /digital-trust/showcase/
+# Otherwise Caddy treats the latter as a prefix and rewrites JS/CSS to index.html (white page).
+
+handle /digital-trust/showcase/* {
+	uri strip_prefix /digital-trust/showcase
 	root * /srv/digital-trust/showcase
-	rewrite * /index.html
+	try_files {path} /index.html
 	file_server
 }
 
-handle /digital-trust/showcase/* {
+handle /digital-trust/showcase/ {
 	uri strip_prefix /digital-trust/showcase
 	root * /srv/digital-trust/showcase
 	try_files {path} /index.html
