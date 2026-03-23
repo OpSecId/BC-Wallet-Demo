@@ -7,19 +7,42 @@ export let agentKey = ''
 
 export const tractionBaseUrl = process.env.TRACTION_URL ?? ''
 
+function tractionEnvOrThrow(): { tractionBaseUrl: string; tenantId: string; apiKey: string } {
+  const tractionBaseUrl = (process.env.TRACTION_URL ?? '').trim().replace(/\/$/, '')
+  const tenantId = (process.env.TENANT_ID ?? '').trim()
+  const apiKey = (process.env.API_KEY ?? '').trim()
+  const missing: string[] = []
+  if (!tractionBaseUrl) missing.push('TRACTION_URL')
+  if (!tenantId) missing.push('TENANT_ID')
+  if (!apiKey) missing.push('API_KEY')
+  if (missing.length) {
+    throw new Error(
+      `Missing required Traction env: ${missing.join(', ')}. Without them the server calls ` +
+        `\`/multitenancy/tenant/{TENANT_ID}/token\` on localhost and fails. Set variables in your host (e.g. Railway).`
+    )
+  }
+  const issuer = (process.env.ISSUER_ID ?? process.env.TRACTION_DID ?? '').trim()
+  if (!issuer) {
+    throw new Error(
+      'Missing TRACTION_DID or ISSUER_ID (public did:webvh used as AnonCreds issuerId). Set it in your deployment env.'
+    )
+  }
+  return { tractionBaseUrl, tenantId, apiKey }
+}
+
 export const tractionApiKeyUpdaterInit = async () => {
-  // get traction api key
-  const tractionBaseUrl = process.env.TRACTION_URL ?? ''
-  const tenantId = process.env.TENANT_ID ?? ''
-  const apiKey = process.env.API_KEY ?? ''
+  const { tractionBaseUrl, tenantId, apiKey } = tractionEnvOrThrow()
   agentKey =
     (await axios.post(`${tractionBaseUrl}/multitenancy/tenant/${tenantId}/token`, { api_key: apiKey })).data?.token ??
     agentKey
   // refresh agent key every hour
   setInterval(async () => {
+    const env = tractionEnvOrThrow()
     agentKey =
-      (await axios.post(`${tractionBaseUrl}/multitenancy/tenant/${tenantId}/token`, { api_key: apiKey })).data?.token ??
-      agentKey
+      (await axios.post(
+        `${env.tractionBaseUrl}/multitenancy/tenant/${env.tenantId}/token`,
+        { api_key: env.apiKey }
+      )).data?.token ?? agentKey
   }, 3600000)
 }
 
