@@ -49,8 +49,7 @@ export const UseCasePage: React.FC = () => {
     if (currentUseCase) {
       const steps = currentUseCase.screens
       // check if the next section contains a connection step, if not: keep the current connection in state to use for next section
-      const newConnection =
-        currentUseCase.screens[sectionCount + 1]?.screenId?.startsWith('CONNECTION') ?? false
+      const newConnection = currentUseCase.screens[sectionCount + 1]?.screenId?.startsWith('CONNECTION') ?? false
 
       if (steps.length === stepCount) {
         dispatch(nextSection())
