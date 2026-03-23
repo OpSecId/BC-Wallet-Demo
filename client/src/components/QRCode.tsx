@@ -1,12 +1,10 @@
 import { track } from 'insights-js'
+import { QRCodeSVG } from 'qrcode.react'
 import React, { useEffect } from 'react'
 
 import { isConnected } from '../utils/Helpers'
 
 import { CheckMark } from './Checkmark'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const QR = require('qrcode.react')
 
 export interface Props {
   invitationUrl: string
@@ -14,7 +12,7 @@ export interface Props {
   overlay?: boolean
 }
 
-export const QRCode: React.FC<Props> = ({ invitationUrl, connectionState, overlay }) => {
+export const QRCode: React.FC<Props> = ({ invitationUrl, connectionState, overlay = false }) => {
   const isCompleted = isConnected(connectionState as string)
 
   useEffect(() => {
@@ -27,7 +25,13 @@ export const QRCode: React.FC<Props> = ({ invitationUrl, connectionState, overla
 
   const renderQRCode = invitationUrl && (
     <div className={`relative ${overlay ? 'bg-none' : 'rounded-lg bg-bcgov-lightgrey p-4 m-auto'}`}>
-      <QR value={invitationUrl} size={165} />
+      <QRCodeSVG
+        value={invitationUrl}
+        size={256}
+        level="M"
+        marginSize={2}
+        className="mx-auto block h-auto w-full max-w-[256px]"
+      />
       {isCompleted && (
         <div className="absolute inset-0 flex justify-center items-center bg-grey bg-opacity-60 rounded-lg">
           <CheckMark height="64" colorCircle="grey" />

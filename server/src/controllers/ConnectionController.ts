@@ -25,7 +25,7 @@ export class ConnectionController {
       accept: ['didcomm/aip1', 'didcomm/aip2;env=rfc19'],
       alias: 'connection',
       goal: '',
-      handshake_protocols: ['https://didcomm.org/didexchange/1.0', 'https://didcomm.org/connections/1.0'],
+      handshake_protocols: ['https://didcomm.org/didexchange/1.1'],
       protocol_version: '1.1',
       use_public_did: false,
     }
@@ -35,4 +35,4 @@ export class ConnectionController {
 }
 
 //https://traction-tenant-proxy-dev.apps.silver.devops.gov.bc.ca/out-of-band/create-invitation?multi_use=false
-// {"accept":["didcomm/aip1","didcomm/aip2;env=rfc19"],"alias":"hello","goal":"","goal_code":"","handshake_protocols":["https://didcomm.org/didexchange/1.0","https://didcomm.org/connections/1.0"],"my_label":"","protocol_version":"1.1","use_public_did":false}
+// {"accept":["didcomm/aip1","didcomm/aip2;env=rfc19"],"alias":"hello","goal":"","goal_code":"","handshake_protocols":["https://didcomm.org/didexchange/1.1"],"my_label":"","protocol_version":"1.1","use_public_did":false}

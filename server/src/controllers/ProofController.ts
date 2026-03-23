@@ -39,7 +39,7 @@ export class ProofController {
           type: 'present-proof',
         },
       ],
-      handshake_protocols: ['https://didcomm.org/didexchange/1.0'],
+      handshake_protocols: ['https://didcomm.org/didexchange/1.1'],
       metadata: {},
       my_label: 'Proof Invitation',
       protocol_version: '1.1',

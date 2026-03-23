@@ -19,6 +19,7 @@
     "format": "yarn prettier --write",
     "prepare": "husky install",
     "client:start": "yarn workspace client start",
+    "client:dev": "yarn client:start",
     "client:build": "yarn workspace client build",
     "server:dev": "yarn workspace server dev",
     "server:build": "yarn workspace server build",
