@@ -1,0 +1,36 @@
+# Static SPA only — API calls go to REACT_APP_HOST_BACKEND from the browser (see BaseUrl.ts).
+# Railway sets PORT; Caddy listens on that port.
+
+:{$PORT}
+
+encode gzip zstd
+
+log {
+	output stdout
+}
+
+handle /health {
+	respond "ok" 200
+}
+
+handle /digital-trust/showcase {
+	redir /digital-trust/showcase/ 308
+}
+
+# Trailing slash only → index.html
+handle /digital-trust/showcase/ {
+	root * /srv/digital-trust/showcase
+	rewrite * /index.html
+	file_server
+}
+
+handle /digital-trust/showcase/* {
+	uri strip_prefix /digital-trust/showcase
+	root * /srv/digital-trust/showcase
+	try_files {path} /index.html
+	file_server
+}
+
+handle {
+	redir /digital-trust/showcase/ 308
+}

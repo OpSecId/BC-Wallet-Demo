@@ -12,10 +12,16 @@ RUN yarn build
 
 # production stage
 FROM ${runtime_image} as production-stage
-RUN mkdir -p /srv/digital-trust/showcase
-COPY --from=build-stage /app/client/build /srv/digital-trust/showcase
 
-# Fix permissions issue with Caddy image
-# - Between version 2.6.2 and 2.6.3 there were some permissions changes on the official images that stopped them from working on OpenShift.
-# - This update resolves that permissions issue for OCP.
+RUN mkdir -p /srv/digital-trust/showcase /etc/caddy
+COPY --from=build-stage /app/client/build /srv/digital-trust/showcase
+COPY client/Caddyfile.docker /etc/caddy/Caddyfile
+
+# Fix permissions issue with Caddy image (OpenShift)
 RUN chown 1001:root /usr/bin/caddy
+
+ENV PORT=8080
+EXPOSE 8080
+
+# Do not use `yarn start` here — final image has no Node/Yarn; Caddy serves the CRA build.
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
