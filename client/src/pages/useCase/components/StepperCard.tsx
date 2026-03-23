@@ -9,7 +9,7 @@ export interface Props {
 }
 
 export const StepperCard: React.FC<Props> = ({ steps, currentStep }) => {
-  const progress = steps.filter((step) => !step.screenId.startsWith('START'))
+  const progress = steps.filter((step) => step.screenId && !step.screenId.startsWith('START'))
 
   const stepViewItems = progress.map((item, idx) => {
     const currentStepIsEqual = item.screenId === currentStep

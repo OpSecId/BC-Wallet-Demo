@@ -63,7 +63,7 @@ export const OnboardingContainer: React.FC<Props> = ({
 
   const isBackDisabled = ['PICK_CHARACTER', 'ACCEPT_CREDENTIAL'].includes(onboardingStep)
   const isForwardDisabled =
-    (onboardingStep.startsWith('CONNECT') && !connectionCompleted) ||
+    (onboardingStep?.startsWith('CONNECT') && !connectionCompleted) ||
     (onboardingStep === 'ACCEPT_CREDENTIAL' && !credentialsAccepted) ||
     (onboardingStep === 'ACCEPT_CREDENTIAL' && credentials?.length === 0) ||
     (onboardingStep === 'PICK_CHARACTER' && !currentCharacter)
@@ -146,7 +146,7 @@ export const OnboardingContainer: React.FC<Props> = ({
       return <SetupStart key={progress} title={title} text={text} />
     } else if (progress === 'CHOOSE_WALLET') {
       return <ChooseWallet key={progress} title={title} text={text} addOnboardingProgress={nextOnboardingPage} />
-    } else if (progress.startsWith('CONNECT')) {
+    } else if (progress?.startsWith('CONNECT')) {
       return (
         <SetupConnection
           key={progress}
@@ -163,7 +163,7 @@ export const OnboardingContainer: React.FC<Props> = ({
           backgroundImage={currentCharacter?.image}
         />
       )
-    } else if (progress.startsWith('ACCEPT') && credentials && connectionId) {
+    } else if (progress?.startsWith('ACCEPT') && credentials && connectionId) {
       return (
         <AcceptCredential
           key={progress}

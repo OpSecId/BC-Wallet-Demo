@@ -115,7 +115,7 @@ export const Section: React.FC<Props> = ({
   }, [completed, dispatch, slug])
 
   useEffect(() => {
-    if (step?.screenId.startsWith('CONNECTION')) {
+    if (step?.screenId?.startsWith('CONNECTION')) {
       if (isConnectionCompleted) {
         setIsForwardDisabled(false)
       } else {
@@ -123,7 +123,7 @@ export const Section: React.FC<Props> = ({
       }
     }
 
-    if (step?.screenId.startsWith('PROOF') || step?.screenId.startsWith('PROOF_OOB')) {
+    if (step?.screenId?.startsWith('PROOF') || step?.screenId?.startsWith('PROOF_OOB')) {
       if (isProofCompleted) {
         setIsForwardDisabled(false)
       } else {
@@ -131,7 +131,7 @@ export const Section: React.FC<Props> = ({
       }
     }
 
-    if (step?.screenId.startsWith('CREDENTIAL')) {
+    if (step?.screenId?.startsWith('CREDENTIAL')) {
       if (credentialsReceived) {
         setIsForwardDisabled(false)
       } else {
@@ -140,7 +140,7 @@ export const Section: React.FC<Props> = ({
     }
 
     // button is never disabled on INFO step
-    if (step?.screenId.startsWith('INFO')) {
+    if (step?.screenId?.startsWith('INFO')) {
       setIsForwardDisabled(false)
     }
 
@@ -154,7 +154,7 @@ export const Section: React.FC<Props> = ({
 
   useEffect(() => {
     // automatically go to next step if connection is set up
-    if (step?.screenId.startsWith('CONNECTION') && isConnectionCompleted) {
+    if (step?.screenId?.startsWith('CONNECTION') && isConnectionCompleted) {
       next()
       trackSelfDescribingEvent({
         event: {
@@ -172,14 +172,14 @@ export const Section: React.FC<Props> = ({
   useEffect(() => {
     if (isMobile) {
       // reset mobile scroll on first & last step
-      if (step.screenId.startsWith('START') || step.screenId.startsWith('END')) {
+      if (step?.screenId?.startsWith('START') || step?.screenId?.startsWith('END')) {
         window.scrollTo(0, 0)
       }
     }
   }, [stepCount, sectionCount])
 
   const renderStepItem = () => {
-    if (step.screenId.startsWith('START')) {
+    if (step?.screenId?.startsWith('START')) {
       return (
         <StartContainer
           key={step.screenId}
@@ -190,7 +190,7 @@ export const Section: React.FC<Props> = ({
         />
       )
     }
-    if (step.screenId.startsWith('END')) {
+    if (step?.screenId?.startsWith('END')) {
       return <EndContainer key={step.screenId} step={step} />
     } else {
       return (
@@ -214,11 +214,11 @@ export const Section: React.FC<Props> = ({
               data-cy="section"
             >
               <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-                {step.screenId.startsWith('INFO') && <StepInformation key={step.screenId} step={step} />}
-                {step.screenId.startsWith('CONNECTION') && (
+                {step.screenId?.startsWith('INFO') && <StepInformation key={step.screenId} step={step} />}
+                {step.screenId?.startsWith('CONNECTION') && (
                   <StepConnection newConnection={true} key={step.screenId} step={step} connection={connection} />
                 )}
-                {step.screenId.startsWith('PROOF') && step.requestOptions && connection.id && (
+                {step.screenId?.startsWith('PROOF') && step.requestOptions && connection.id && (
                   <StepProof
                     key={step.screenId}
                     entityName={verifier.name}
@@ -229,7 +229,7 @@ export const Section: React.FC<Props> = ({
                     requestedCredentials={step.requestOptions.requestedCredentials}
                   />
                 )}
-                {step.screenId.startsWith('STEP_END') && <StepEnd key={step.screenId} step={step} />}
+                {step.screenId?.startsWith('STEP_END') && <StepEnd key={step.screenId} step={step} />}
               </AnimatePresence>
               <div className="flex justify-between items-center">
                 <BackButton
@@ -248,7 +248,7 @@ export const Section: React.FC<Props> = ({
                   }}
                   disabled={isBackDisabled}
                 />
-                {step.screenId.startsWith('STEP_END') ? (
+                {step.screenId?.startsWith('STEP_END') ? (
                   <Button text="COMPLETE" onClick={() => setCompleted(true)} />
                 ) : (
                   <SmallButton
