@@ -95,28 +95,28 @@ export const lawyerCustom: CustomCharacter = {
       image: '/public/lawyer2/onboarding/lawyerCredPhone.svg',
       credentials: [
         {
-          name: 'member_card',
+          name: 'Law Society of BC Member Card',
           version: process.env.LAWYER_VERSION ?? '1.0',
           icon: '/public/lawyer2/connection/lsbc-logo.png',
           attributes: [
             {
-              name: 'Member Status',
+              name: 'member_status',
               value: 'Active',
             },
             {
-              name: 'Given Name',
+              name: 'given_name',
               value: 'Joyce',
             },
             {
-              name: 'PPID',
+              name: 'ppid',
               value: 'MC12349',
             },
             {
-              name: 'Member Status Code',
+              name: 'member_status_code',
               value: '1',
             },
             {
-              name: 'Surname',
+              name: 'surname',
               value: 'Lee-Martinez',
             },
           ],
@@ -137,7 +137,7 @@ export const lawyerCustom: CustomCharacter = {
       image: '/public/lawyer2/onboarding/personCredPhone.svg',
       credentials: [
         {
-          name: 'Person',
+          name: 'Person Credential',
           version: process.env.PERSON_VERSION ?? '1.0',
           icon: '/public/lawyer2/connection/bc-logo.png',
           attributes: [
@@ -221,14 +221,12 @@ export const lawyerCustom: CustomCharacter = {
             requestedCredentials: [
               {
                 icon: '/public/lawyer2/connection/lsbc-logo.png',
-                name: 'member_card',
-                schema_id: 'QEquAHkM35w4XVT3Ku5yat:2:member_card:1.54',
-                properties: ['Given Name', 'Surname', 'PPID'],
+                name: 'Law Society of BC Member Card',
+                properties: ['given_name', 'surname', 'ppid'],
               },
               {
                 icon: '/public/lawyer2/connection/bc-logo.png',
-                name: 'Person',
-                schema_id: 'QEquAHkM35w4XVT3Ku5yat:2:Person:1.3',
+                name: 'Person Credential',
                 properties: ['given_names', 'family_name'],
               },
             ],
@@ -270,15 +268,13 @@ export const lawyerCustom: CustomCharacter = {
             requestedCredentials: [
               {
                 icon: '/public/lawyer2/connection/lsbc-logo.png',
-                name: 'member_card',
-                schema_id: 'QEquAHkM35w4XVT3Ku5yat:2:member_card:1.54',
-                properties: ['Given Name', 'Surname', 'PPID'],
+                name: 'Law Society of BC Member Card',
+                properties: ['given_name', 'surname', 'ppid'],
                 nonRevoked: { to: now() },
               },
               {
                 icon: '/public/lawyer2/connection/bc-logo.png',
-                name: 'Person',
-                schema_id: 'QEquAHkM35w4XVT3Ku5yat:2:Person:1.3',
+                name: 'Person Credential',
                 properties: ['given_names', 'family_name', 'picture'],
                 nonRevoked: { to: now() },
               },
@@ -327,7 +323,7 @@ export const lawyerCustom: CustomCharacter = {
               },
               {
                 icon: '/public/lawyer2/connection/bc-logo.png',
-                name: 'Person',
+                name: 'Person Credential',
                 properties: ['given_names', 'family_name', 'picture'],
                 nonRevoked: { to: now() },
               },

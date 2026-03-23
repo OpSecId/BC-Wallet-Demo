@@ -1,7 +1,7 @@
 import { Body, JsonController, Post } from 'routing-controllers'
 import { Service } from 'typedi'
 
-import { tractionRequest } from '../utils/tractionHelper'
+import { buildV20AnonCredsPresentationRequest, buildV20IssueCredentialSendBody, tractionRequest } from '../utils/tractionHelper'
 
 @JsonController('/deeplink')
 @Service()
@@ -10,7 +10,7 @@ export class DeeplinkController {
   public async offerCredential(@Body() params: any) {
     const state = await this.waitUntilConnected(params.connection_id)
     if (this.isConnected(state)) {
-      const resp = await tractionRequest.post(`/issue-credential/send`, params)
+      const resp = await tractionRequest.post(`/issue-credential-2.0/send`, buildV20IssueCredentialSendBody(params))
       return resp.data
     }
   }
@@ -19,7 +19,12 @@ export class DeeplinkController {
   public async requestProof(@Body() params: any) {
     const state = await this.waitUntilConnected(params.connection_id)
     if (this.isConnected(state)) {
-      const resp = await tractionRequest.post('/present-proof/send-request', params)
+      const resp = await tractionRequest.post('/present-proof-2.0/send-request', {
+        connection_id: params.connection_id,
+        comment: params.comment,
+        auto_verify: params.auto_verify ?? true,
+        presentation_request: buildV20AnonCredsPresentationRequest(params.proof_request ?? {}),
+      })
       return resp.data
     }
   }

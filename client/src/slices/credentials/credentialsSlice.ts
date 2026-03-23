@@ -31,14 +31,20 @@ const credentialSlice = createSlice({
     },
     setCredential: (state, action) => {
       const credentialData = action.payload
-      const credDefParts = credentialData.credential_definition_id.split(':')
-      const credName = credDefParts[credDefParts.length - 1]
+      const credDefId: string | undefined =
+        credentialData.credential_definition_id ?? credentialData.cred_def_id
+      if (!credDefId) return
+      const credName = credDefId.split(/[:/]/).filter(Boolean).pop() ?? credDefId
       if (!state.issuedCredentials.includes(credName)) {
         state.issuedCredentials.push(credName)
       }
-      if (!state.revokableCredentials.map((rev) => rev.revocationRegId).includes(credentialData.revoc_reg_id)) {
+      const revRegId = credentialData.revoc_reg_id ?? credentialData.rev_reg_id
+      if (
+        revRegId &&
+        !state.revokableCredentials.map((rev) => rev.revocationRegId).includes(revRegId)
+      ) {
         state.revokableCredentials.push({
-          revocationRegId: credentialData.revoc_reg_id,
+          revocationRegId: revRegId,
           connectionId: credentialData.connection_id,
           credRevocationId: credentialData.revocation_id,
         })
@@ -56,6 +62,10 @@ const credentialSlice = createSlice({
       })
       .addCase(issueCredential.fulfilled, (state, action) => {
         state.isIssueCredentialLoading = false
+        const credName = action.meta.arg.cred.name
+        if (credName && !state.issuedCredentials.includes(credName)) {
+          state.issuedCredentials.push(credName)
+        }
       })
       .addCase(fetchCredentialById.pending, (state) => {
         state.isLoading = true

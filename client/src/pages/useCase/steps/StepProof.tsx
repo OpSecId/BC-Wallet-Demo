@@ -32,10 +32,12 @@ export const StepProof: React.FC<Props> = ({
   characterType,
 }) => {
   const dispatch = useAppDispatch()
+  const st = proof?.state as string
   const proofReceived =
-    (proof?.state as string) === 'presentation_received' ||
-    (proof?.state as string) === 'verified' ||
-    proof?.state === 'done'
+    st === 'presentation_received' ||
+    st === 'presentation-received' ||
+    st === 'verified' ||
+    st === 'done'
 
   const [isFailedRequestModalOpen, setIsFailedRequestModalOpen] = useState(false)
   const showFailedRequestModal = () => setIsFailedRequestModalOpen(true)
@@ -118,8 +120,15 @@ export const StepProof: React.FC<Props> = ({
       return
     }
     const { endpoint, state } = message
-    if (endpoint === 'present_proof' && (state === 'presentation_received' || state === 'verified')) {
-      dispatch(fetchProofById(message.presentation_exchange_id))
+    const presId = message.presentation_exchange_id ?? message.pres_ex_id
+    const proofDone =
+      state === 'presentation_received' ||
+      state === 'presentation-received' ||
+      state === 'verified' ||
+      state === 'done' ||
+      message.verified === 'true'
+    if (endpoint === 'present_proof' && proofDone && presId) {
+      dispatch(fetchProofById(presId))
     }
   }, [message])
 

@@ -2,6 +2,7 @@ import type { CustomCharacter } from '../../slices/types'
 
 import { trackSelfDescribingEvent } from '@snowplow/browser-tracker'
 import { AnimatePresence, motion } from 'framer-motion'
+import { startCase } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { FiLogOut } from 'react-icons/fi'
@@ -55,7 +56,10 @@ export const OnboardingContainer: React.FC<Props> = ({
 
   const connectionCompleted = isConnected(connectionState as string)
   const credentials = currentCharacter?.onboarding.find((step) => step.screenId === onboardingStep)?.credentials
-  const credentialsAccepted = credentials?.every((cred) => issuedCredentials.includes(cred.name))
+  const issuedStartCase = issuedCredentials.map((n) => startCase(n))
+  const credentialsAccepted = credentials?.every(
+    (cred) => issuedCredentials.includes(cred.name) || issuedStartCase.includes(cred.name)
+  )
 
   const isBackDisabled = ['PICK_CHARACTER', 'ACCEPT_CREDENTIAL'].includes(onboardingStep)
   const isForwardDisabled =

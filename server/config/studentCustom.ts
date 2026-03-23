@@ -78,7 +78,7 @@ export const studentCustom: CustomCharacter = {
       image: '/public/common/onboarding-credential-light.svg',
       credentials: [
         {
-          name: 'student_card',
+          name: 'Student Card',
           version: process.env.STUDENT_VERSION ?? '1.0',
           icon: '/public/student/icon-student.svg',
           attributes: [
@@ -133,8 +133,7 @@ export const studentCustom: CustomCharacter = {
             requestedCredentials: [
               {
                 icon: '/public/student/useCases/school/icon-university-card.png',
-                name: 'student_card',
-                schema_id: 'QEquAHkM35w4XVT3Ku5yat:2:student_card:1.6',
+                name: 'Student Card',
                 predicates: {
                   name: 'expiry_date',
                   type: '>=',
@@ -179,8 +178,7 @@ export const studentCustom: CustomCharacter = {
             requestedCredentials: [
               {
                 icon: '/public/student/useCases/school/icon-university-card.png',
-                name: 'student_card',
-                schema_id: 'QEquAHkM35w4XVT3Ku5yat:2:student_card:1.6',
+                name: 'Student Card',
                 properties: ['student_first_name'],
               },
             ],
