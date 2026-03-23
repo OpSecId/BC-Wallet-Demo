@@ -91,7 +91,8 @@ const run = async () => {
     return response
   })
 
-  server.listen(5000)
+  const port = Number(process.env.PORT) || 5000
+  server.listen(port)
 }
 
 run()
