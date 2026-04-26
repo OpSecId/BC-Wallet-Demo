@@ -1,4 +1,8 @@
-# Optional web UI for MongoDB: docker compose --profile mongo-ui up
+# Do not start every service at once: `dev` and `frontend`+`backend` both use ports 3000 and 5000.
+# Typical stacks:
+#   docker compose up --build mongodb backend frontend
+#   docker compose up --build mongodb dev
+# Optional MongoDB web UI: docker compose --profile mongo-ui up … (see mongo-express service)
 services:
   mongodb:
     image: mongo:8
@@ -6,7 +10,7 @@ services:
     volumes:
       - mongo-data:/data/db
     environment:
-      MONGO_INITDB_DATABASE: bcwallet_demo
+      MONGO_INITDB_DATABASE: bc_wallet_showcase
     ports:
       # Published to loopback only — mongosh/Compass on the host; in-cluster use hostname `mongodb`
       - '127.0.0.1:27017:27017'
@@ -36,17 +40,17 @@ services:
     image: bc-wallet-demo-web
     build:
       context: ./
-      dockerfile: ./client/Dockerfile
+      dockerfile: ./frontend/Dockerfile
     volumes:
       - type: bind
-        source: ./client/Caddyfile
+        source: ./frontend/Caddyfile
         target: /etc/caddy/Caddyfile
     ports:
       - '3000:3000'
     depends_on:
       - backend
     env_file:
-      - ./client/.env
+      - ./frontend/.env
   backend:
     image: bc-wallet-demo-server
     build:
@@ -59,8 +63,8 @@ services:
     environment:
       MONGODB_HOST: mongodb
       MONGODB_PORT: '27017'
-      MONGODB_DB_NAME: bcwallet_demo
-      MONGODB_URI: mongodb://mongodb:27017/bcwallet_demo
+      MONGODB_DB_NAME: bc_wallet_showcase
+      MONGODB_URI: mongodb://mongodb:27017/bc_wallet_showcase
     depends_on:
       mongodb:
         condition: service_healthy
@@ -77,8 +81,8 @@ services:
     environment:
       MONGODB_HOST: mongodb
       MONGODB_PORT: '27017'
-      MONGODB_DB_NAME: bcwallet_demo
-      MONGODB_URI: mongodb://mongodb:27017/bcwallet_demo
+      MONGODB_DB_NAME: bc_wallet_showcase
+      MONGODB_URI: mongodb://mongodb:27017/bc_wallet_showcase
     depends_on:
       mongodb:
         condition: service_healthy

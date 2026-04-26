@@ -1,0 +1,25 @@
+ARG build_image=node:22-alpine
+ARG runtime_image=caddy:alpine
+
+# build stage
+FROM ${build_image} AS build-stage
+WORKDIR /app
+ENV HUSKY=0
+COPY . .
+# CI passes legacy secret names (REACT_APP_*). Map them to Vite env for `vite build`.
+ARG REACT_APP_INSIGHTS_PROJECT_ID
+ARG REACT_APP_HOST_BACKEND
+ENV VITE_INSIGHTS_PROJECT_ID=$REACT_APP_INSIGHTS_PROJECT_ID
+ENV VITE_HOST_BACKEND=$REACT_APP_HOST_BACKEND
+RUN yarn install --frozen-lockfile --network-timeout 600000 --non-interactive
+RUN yarn workspace frontend build
+
+# production stage
+FROM ${runtime_image} AS production-stage
+RUN mkdir -p /srv/digital-trust/showcase
+COPY --from=build-stage /app/frontend/dist /srv/digital-trust/showcase
+
+# Fix permissions issue with Caddy image
+# - Between version 2.6.2 and 2.6.3 there were some permissions changes on the official images that stopped them from working on OpenShift.
+# - This update resolves that permissions issue on OCP.
+RUN chown 1001:root /usr/bin/caddy

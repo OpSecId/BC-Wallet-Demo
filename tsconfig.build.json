@@ -17,10 +17,11 @@
     "jsx": "react-jsx",
     "skipLibCheck": true
   },
-  "include": ["client", "server"],
+  "include": ["frontend", "server"],
   "exclude": [
     "node_modules",
     "build",
+    "frontend/dist",
     "**/__tests__/**",
     "**/*.test.ts",
     "**/*.test.tsx",

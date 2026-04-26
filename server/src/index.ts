@@ -3,17 +3,21 @@ import type { Express } from 'express'
 
 import { json, static as stx } from 'express'
 import * as http from 'http'
+import mongoose from 'mongoose'
 import { pinoHttp } from 'pino-http'
 import { createExpressServer } from 'routing-controllers'
 import { Server } from 'socket.io'
 
+import { connectDB, registerShutdownHandlers } from './db/connection'
 import logger from './utils/logger'
 import { tractionApiKeyUpdaterInit, tractionRequest, tractionGarbageCollection } from './utils/tractionHelper'
 
 const baseRoute = process.env.BASE_ROUTE
 
+const controllerPattern = __filename.endsWith('.js') ? '/controllers/*.js' : '/controllers/*.ts'
+
 const app: Express = createExpressServer({
-  controllers: [__dirname + '/controllers/*.ts'],
+  controllers: [__dirname + controllerPattern],
   cors: true,
   routePrefix: `${baseRoute}/demo`,
 })
@@ -31,7 +35,7 @@ const socketMap = new Map()
 const connectionMap = new Map()
 
 ws.on('connection', (socket) => {
-  logger.debug({ socketId: socket.id }, 'WebSocket client connected')
+  logger.debug({ socketId: socket.id }, 'WebSocket frontend connected')
   socket.on('subscribe', ({ connectionId }) => {
     if (connectionId) {
       socketMap.set(connectionId, socket)
@@ -45,11 +49,14 @@ ws.on('connection', (socket) => {
     if (connectionId) {
       socketMap.delete(connectionId)
     }
-    logger.debug({ socketId: socket.id, connectionId }, 'WebSocket client disconnected')
+    logger.debug({ socketId: socket.id, connectionId }, 'WebSocket frontend disconnected')
   })
 })
 
 const run = async () => {
+  await connectDB()
+  registerShutdownHandlers()
+
   await tractionApiKeyUpdaterInit()
   await tractionGarbageCollection()
 
@@ -70,7 +77,7 @@ const run = async () => {
         req: () => undefined,
         res: () => undefined,
       },
-    })
+    }),
   )
 
   app.use(`${baseRoute}/public`, stx(__dirname + '/public'))
@@ -101,7 +108,8 @@ const run = async () => {
 
   // respond to ditp health checks
   app.get(`${baseRoute}/server/ready`, async (req, res) => {
-    res.json({ ready: true })
+    const dbReady = mongoose.connection.readyState === 1
+    res.status(dbReady ? 200 : 503).json({ ready: dbReady })
     return res
   })
 
@@ -122,4 +130,7 @@ const run = async () => {
   logger.info('Server listening on port 5000')
 }
 
-run()
+run().catch((error: unknown) => {
+  logger.error({ err: error }, 'Fatal startup error')
+  process.exit(1)
+})
